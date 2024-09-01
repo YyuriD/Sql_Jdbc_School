@@ -2,6 +2,7 @@ package com.foxminded.yuri.school.commands;
 
 import java.util.List;
 
+import com.foxminded.yuri.school.SchoolApp;
 import com.foxminded.yuri.school.converter.DataConverter;
 import com.foxminded.yuri.school.model.Group;
 import com.foxminded.yuri.school.model.Student;
@@ -93,6 +94,15 @@ public enum Command {
 				return "fail";
 			}
 		}
+	},
+
+	MENU("") {
+
+		@Override
+		public String execute(String parameters) {
+			return SchoolApp.getMenu();
+		}
+
 	},
 
 	EXIT("") {

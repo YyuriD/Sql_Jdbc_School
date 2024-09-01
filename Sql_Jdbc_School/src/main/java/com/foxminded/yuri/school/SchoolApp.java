@@ -10,11 +10,11 @@ public class SchoolApp {
 
 	public static void main(String[] args) {
 
-		viewMenu();
-		processCommands();
+		System.out.println(getMenu());
+		processMenu();
 	}
 
-	private static void processCommands() {
+	private static void processMenu() {
 		final int INPUT_PARTS_NUM = 2;
 
 		try (Scanner scanner = new Scanner(System.in)) {
@@ -34,15 +34,12 @@ public class SchoolApp {
 					currentCommand = parseCommand(parts[0]);
 
 					if (Command.EXIT == currentCommand) {
-						currentCommand.execute("Good bye!");
+						System.out.println(currentCommand.execute("Good bye!"));
 						continue;
 					}
 
-					if (parts.length != INPUT_PARTS_NUM) {
-						throw new IllegalArgumentException("Incorrect input.");
-					}
-
-					String message = currentCommand.execute(parts[1]);
+					String message = parts.length < INPUT_PARTS_NUM ? currentCommand.execute("")
+							: currentCommand.execute(parts[1]);
 					System.out.println(message);
 				} catch (Exception e) {
 					System.out.println("Error: " + e.getMessage());
@@ -59,13 +56,19 @@ public class SchoolApp {
 		}
 	}
 
-	private static void viewMenu() {
+	public static String getMenu() {
 		List<Command> commands = Arrays.asList(Command.values());
+		StringBuilder menuBuilder = new StringBuilder();
+
 		// TODO get ride of magic numbers(calcCommandsMaxLength, calcParamsMaxLength)
-		System.out.println("-".repeat(80));
-		System.out.println(String.format("| %-27s | %-48s |", "Command", "Parameters discription"));
-		System.out.println("-".repeat(80));
-		commands.forEach(c -> System.out.println(String.format("| %-27s | %-48s |", c.name(), c.parameterDiscription)));
-		System.out.println("-".repeat(80));
+		menuBuilder.append("-".repeat(80)).append("\n");
+		menuBuilder.append(String.format("| %-27s | %-48s |", "Command", "Parameters description")).append("\n");
+		menuBuilder.append("-".repeat(80)).append("\n");
+
+		commands.forEach(c -> menuBuilder.append(String.format("| %-27s | %-48s |", c.name(), c.parameterDiscription))
+				.append("\n"));
+
+		menuBuilder.append("-".repeat(80)).append("\n");
+		return menuBuilder.toString();
 	}
 }
