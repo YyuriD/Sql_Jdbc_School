@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import com.foxminded.yuri.school.cli.commands.Command;
+import com.foxminded.yuri.school.commands.Command;
 
 public class SchoolApp {
 
@@ -13,7 +13,6 @@ public class SchoolApp {
 		viewMenu();
 		processCommands();
 	}
-
 
 	private static void processCommands() {
 		final int INPUT_PARTS_NUM = 2;
@@ -40,10 +39,11 @@ public class SchoolApp {
 					}
 
 					if (parts.length != INPUT_PARTS_NUM) {
-						throw new IllegalArgumentException("Incorrect number of parameters.");
+						throw new IllegalArgumentException("Incorrect input.");
 					}
 
-					currentCommand.execute(parts[1]);
+					String message = currentCommand.execute(parts[1]);
+					System.out.println(message);
 				} catch (Exception e) {
 					System.out.println("Error: " + e.getMessage());
 				}
@@ -61,9 +61,9 @@ public class SchoolApp {
 
 	private static void viewMenu() {
 		List<Command> commands = Arrays.asList(Command.values());
-		// TODO get ride of magic numbers
+		// TODO get ride of magic numbers(calcCommandsMaxLength, calcParamsMaxLength)
 		System.out.println("-".repeat(80));
-		System.out.println(String.format("| %-27s | %-48s |", "Command", "Parameter discription"));
+		System.out.println(String.format("| %-27s | %-48s |", "Command", "Parameters discription"));
 		System.out.println("-".repeat(80));
 		commands.forEach(c -> System.out.println(String.format("| %-27s | %-48s |", c.name(), c.parameterDiscription)));
 		System.out.println("-".repeat(80));

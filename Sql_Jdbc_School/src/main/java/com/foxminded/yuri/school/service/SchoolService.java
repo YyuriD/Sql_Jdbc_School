@@ -27,7 +27,7 @@ public class SchoolService  {
 		return false;
 	}
 
-	public boolean addStudentToCourse(Integer courseId) {
+	public boolean addStudentToCourse(Integer studentId, Integer courseId) {
 		// TODO Auto-generated method stub
 		return false;
 	}
