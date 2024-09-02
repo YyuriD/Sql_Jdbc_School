@@ -3,10 +3,11 @@ package com.foxminded.yuri.school.commands;
 import java.util.List;
 
 import com.foxminded.yuri.school.SchoolApp;
-import com.foxminded.yuri.school.converter.DataConverter;
 import com.foxminded.yuri.school.model.Group;
 import com.foxminded.yuri.school.model.Student;
 import com.foxminded.yuri.school.service.SchoolService;
+import com.foxminded.yuri.school.utils.DataConvertException;
+import com.foxminded.yuri.school.utils.DataConverter;
 
 public enum Command {
 
@@ -14,15 +15,16 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			Integer studentsQuantity = DataConverter.convertToInt(parameters);
-			if (studentsQuantity == null) {
-				return "Error: parameter must be number";
-			}
-			List<Group> groups = schoolService.findGroupsByMaxStudent(studentsQuantity);
-			if (groups == null) {
-				return "not found";
-			} else {
+			Integer studentsQuantity;
+			try {
+				studentsQuantity = DataConverter.convertToInt(parameters);
+				List<Group> groups = schoolService.findGroupsByMaxStudent(studentsQuantity);
+				if (groups == null) {
+					return "not found";
+				}
 				return DataConverter.convertFromListToString(groups);
+			} catch (DataConvertException e) {
+				return e.getMessage();
 			}
 		}
 	},
@@ -31,28 +33,35 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			Integer courseId = DataConverter.convertToInt(parameters);
-			if (courseId == null) {
-				return "Error: parameter must be number";
-			}
-			List<Student> students = schoolService.findStudentsByCourse(courseId);
-			if (students == null) {
-				return "not found";
-			} else {
+			Integer courseId;
+			try {
+				courseId = DataConverter.convertToInt(parameters);
+				List<Student> students = schoolService.findStudentsByCourse(courseId);
+				if (students == null) {
+					return "not found";
+				}
 				return DataConverter.convertFromListToString(students);
+			} catch (DataConvertException e) {
+				return e.getMessage();
 			}
+
 		}
 	},
 
-	ADD_STUDENT("student data: id,name,firstName,lastName,groupId") {
+	ADD_STUDENT("student data: id,firstName,lastName,groupId") {
 
 		@Override
 		public String execute(String parameters) {
-			Student student = DataConverter.convertStudent(parameters);
-			if (schoolService.addStudent(student)) {
-				return "student was added";
-			} else {
-				return "error";
+			Student student;
+			try {
+				student = DataConverter.convertStudent(parameters);
+				if (schoolService.addStudent(student)) {
+					return "student was added";
+				} else {
+					return "fail adding student to db";
+				}
+			} catch (DataConvertException e) {
+				return e.getMessage();
 			}
 		}
 	},
@@ -61,12 +70,18 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			Integer studentId = DataConverter.convertToInt(parameters);
-			if (schoolService.deleteStudent(studentId)) {
-				return "student was deleted";
-			} else {
-				return "fail";
+			Integer studentId;
+			try {
+				studentId = DataConverter.convertToInt(parameters);
+				if (schoolService.deleteStudent(studentId)) {
+					return "student was deleted";
+				} else {
+					return "fail remove student from db";
+				}
+			} catch (DataConvertException e) {
+				return e.getMessage();
 			}
+
 		}
 	},
 
@@ -74,12 +89,21 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			Integer[] parts = DataConverter.convertToIntegerArray(parameters);
-			if (schoolService.addStudentToCourse(parts[0], parts[1])) {
-				return "student was added to course";
-			} else {
-				return "fail";
+			Integer[] parts;
+			try {
+				parts = DataConverter.convertToIntegerArray(parameters);
+				if (parts == null || parts.length != 2) {
+					return "Error: wrong parameters";
+				}
+				if (schoolService.addStudentToCourse(parts[0], parts[1])) {
+					return "student was added to course";
+				} else {
+					return "fail adding student to course";
+				}
+			} catch (DataConvertException e) {
+				return e.getMessage();
 			}
+
 		}
 	},
 
@@ -87,12 +111,21 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			Integer[] parts = DataConverter.convertToIntegerArray(parameters);
-			if (schoolService.removeStudentFromCourse(parts[0], parts[1])) {
-				return "student was added to course";
-			} else {
-				return "fail";
+			Integer[] parts;
+			try {
+				parts = DataConverter.convertToIntegerArray(parameters);
+				if (parts == null || parts.length != 2) {
+					return "Error: wrong parameters";
+				}
+				if (schoolService.removeStudentFromCourse(parts[0], parts[1])) {
+					return "student was removed from course";
+				} else {
+					return "fail removing student from course";
+				}
+			} catch (DataConvertException e) {
+				return e.getMessage();
 			}
+
 		}
 	},
 
@@ -100,7 +133,7 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			return SchoolApp.getMenu();
+			return SchoolApp.getMenuView();
 		}
 
 	},

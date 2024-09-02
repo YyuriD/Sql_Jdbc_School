@@ -10,7 +10,7 @@ public class SchoolApp {
 
 	public static void main(String[] args) {
 
-		System.out.println(getMenu());
+		System.out.println(getMenuView());
 		processMenu();
 	}
 
@@ -56,7 +56,7 @@ public class SchoolApp {
 		}
 	}
 
-	public static String getMenu() {
+	public static String getMenuView() {
 		List<Command> commands = Arrays.asList(Command.values());
 		StringBuilder menuBuilder = new StringBuilder();
 

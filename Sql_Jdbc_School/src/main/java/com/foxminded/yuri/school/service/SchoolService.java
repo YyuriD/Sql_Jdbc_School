@@ -29,6 +29,7 @@ public class SchoolService  {
 
 	public boolean addStudentToCourse(Integer studentId, Integer courseId) {
 		// TODO Auto-generated method stub
+		System.out.println("execution addStudentToCourse " + studentId + " " + courseId);
 		return false;
 	}
 
