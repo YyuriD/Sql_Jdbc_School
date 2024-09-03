@@ -12,7 +12,6 @@ public class SchoolService  {
 	StudentDao studentDao = new StudentDao();
 
 	public List<Group> findGroupsByMaxStudent(Integer studentQuantity) {
-		System.out.println("execution findGroupsByMaxStudent");
 		return null;
 	}
 
@@ -21,24 +20,40 @@ public class SchoolService  {
 		return null;
 	}
 
-	public Student addStudent(Student student) throws DAOException {
-		studentDao.add(student);
-		return student;
+	public void addStudent(Student student) throws ServiceLayerException {
+		try {
+			if (isStudentExist(student.getId())) {
+				throw new ServiceLayerException("Can't add student, already exists.");
+			}
+			studentDao.add(student);
+		} catch (DAOException e) {
+			throw new ServiceLayerException("Can't add student.", e);
+		}
 	}
 
-	public boolean deleteStudent(Integer studentId) throws DAOException {
-		return studentDao.remove(studentId);
+	public void deleteStudent(Integer studentId) throws ServiceLayerException {
+		try {
+			if (!isStudentExist(studentId)) {
+				throw new ServiceLayerException("Can't remove student, not found.");
+			}
+			studentDao.remove(studentId);
+		} catch (DAOException e) {
+			throw new ServiceLayerException("Can't remove student.", e);
+		}
 	}
 
 	public boolean addStudentToCourse(Integer studentId, Integer courseId) {
 		// TODO Auto-generated method stub
-		System.out.println("execution addStudentToCourse " + studentId + " " + courseId);
 		return false;
 	}
 
 	public boolean removeStudentFromCourse(Integer studentId, Integer courseId) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	private boolean isStudentExist(Integer studentId) throws DAOException {
+		return studentDao.get(studentId) != null ? true : false;
 	}
 
 }

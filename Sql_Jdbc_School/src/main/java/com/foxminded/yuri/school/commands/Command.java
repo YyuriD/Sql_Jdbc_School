@@ -55,9 +55,10 @@ public enum Command {
 			Student student = null;
 			try {
 				student = DataConverter.convertStudent(parameters);
-				return "Student was added: " + schoolService.addStudent(student).toString();
+				schoolService.addStudent(student);
+				return "Student was added.";
 			} catch (Exception e) {
-				return e.getMessage() + " " + e.getCause().getMessage();
+				return e.getMessage();
 			}
 		}
 	},
@@ -69,10 +70,10 @@ public enum Command {
 			Integer studentId = null;
 			try {
 				studentId = DataConverter.convertToInt(parameters);
-				return schoolService.deleteStudent(studentId) == true ? "Student was deleted"
-						: "Can't delete student, not exists";
+				schoolService.deleteStudent(studentId);
+				return "Student was deleted";
 			} catch (Exception e) {
-				return e.getMessage() + " " + e.getCause().getMessage();
+				return e.getMessage();
 			}
 		}
 	},
