@@ -26,9 +26,8 @@ public class SchoolService  {
 		return student;
 	}
 
-	public boolean deleteStudent(Integer studentId) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteStudent(Integer studentId) throws DAOException {
+		return studentDao.remove(studentId);
 	}
 
 	public boolean addStudentToCourse(Integer studentId, Integer courseId) {

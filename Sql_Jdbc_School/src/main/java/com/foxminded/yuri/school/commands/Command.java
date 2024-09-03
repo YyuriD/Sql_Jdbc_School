@@ -52,10 +52,10 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			Student student;
+			Student student = null;
 			try {
 				student = DataConverter.convertStudent(parameters);
-				return "student was added: " + schoolService.addStudent(student).toString();
+				return "Student was added: " + schoolService.addStudent(student).toString();
 			} catch (Exception e) {
 				return e.getMessage() + " " + e.getCause().getMessage();
 			}
@@ -66,20 +66,15 @@ public enum Command {
 
 		@Override
 		public String execute(String parameters) {
-			Integer studentId;
+			Integer studentId = null;
 			try {
 				studentId = DataConverter.convertToInt(parameters);
-				if (schoolService.deleteStudent(studentId)) {
-					return "student was deleted";
-				} else {
-					return "fail remove student from db";
-				}
-			} catch (DataConvertException e) {
-				return e.getMessage();
+				return schoolService.deleteStudent(studentId) == true ? "Student was deleted"
+						: "Can't delete student, not exists";
+			} catch (Exception e) {
+				return e.getMessage() + " " + e.getCause().getMessage();
 			}
-
 		}
-
 	},
 
 	ADD_STUDENT_TO_COURSE("student id,course id") {
