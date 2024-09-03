@@ -57,7 +57,7 @@ public enum Command {
 				student = DataConverter.convertStudent(parameters);
 				return "student was added: " + schoolService.addStudent(student).toString();
 			} catch (Exception e) {
-				return e.getMessage() + " Cause-> " + e.getCause().getMessage();
+				return e.getMessage() + " " + e.getCause().getMessage();
 			}
 		}
 	},
