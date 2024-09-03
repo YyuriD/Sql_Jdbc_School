@@ -24,7 +24,6 @@ public class DataConverter {
 			String firstName = parts[1];
 			String lastName = parts[2];
 			Integer groupId = convertToInt(parts[3]);
-			System.out.println(new Student(id, firstName, lastName, groupId).toString());
 			return new Student(id, firstName, lastName, groupId);
 		} catch (IllegalArgumentException e) {
 			throw new DataConvertException("Error: fail to convert to student object", e);

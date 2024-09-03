@@ -55,13 +55,9 @@ public enum Command {
 			Student student;
 			try {
 				student = DataConverter.convertStudent(parameters);
-				if (schoolService.addStudent(student)) {
-					return "student was added";
-				} else {
-					return "fail adding student to db";
-				}
-			} catch (DataConvertException e) {
-				return e.getMessage();
+				return "student was added: " + schoolService.addStudent(student).toString();
+			} catch (Exception e) {
+				return e.getMessage() + " Cause-> " + e.getCause().getMessage();
 			}
 		}
 	},
@@ -83,6 +79,7 @@ public enum Command {
 			}
 
 		}
+
 	},
 
 	ADD_STUDENT_TO_COURSE("student id,course id") {
@@ -105,6 +102,7 @@ public enum Command {
 			}
 
 		}
+
 	},
 
 	REMOVE_STUDENT_FROM_COURSE("student id,course id") {
@@ -127,6 +125,7 @@ public enum Command {
 			}
 
 		}
+
 	},
 
 	MENU("") {

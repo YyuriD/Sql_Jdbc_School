@@ -29,7 +29,6 @@ public class SchoolApp {
 					continue;
 				}
 
-				try {
 					String[] parts = input.split(" ", INPUT_PARTS_NUM);
 					currentCommand = parseCommand(parts[0]);
 
@@ -41,9 +40,6 @@ public class SchoolApp {
 					String message = parts.length < INPUT_PARTS_NUM ? currentCommand.execute("")
 							: currentCommand.execute(parts[1]);
 					System.out.println(message);
-				} catch (Exception e) {
-					System.out.println("Error: " + e.getMessage());
-				}
 			}
 		}
 	}

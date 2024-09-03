@@ -2,10 +2,14 @@ package com.foxminded.yuri.school.service;
 
 import java.util.List;
 
+import com.foxminded.yuri.school.dao.DAOException;
+import com.foxminded.yuri.school.dao.StudentDao;
 import com.foxminded.yuri.school.model.Group;
 import com.foxminded.yuri.school.model.Student;
 
 public class SchoolService  {
+
+	StudentDao studentDao = new StudentDao();
 
 	public List<Group> findGroupsByMaxStudent(Integer studentQuantity) {
 		System.out.println("execution findGroupsByMaxStudent");
@@ -17,9 +21,9 @@ public class SchoolService  {
 		return null;
 	}
 
-	public boolean addStudent(Student student) {
-		// TODO Auto-generated method stub
-		return false;
+	public Student addStudent(Student student) throws DAOException {
+		studentDao.add(student);
+		return student;
 	}
 
 	public boolean deleteStudent(Integer studentId) {
