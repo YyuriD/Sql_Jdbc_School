@@ -58,7 +58,7 @@ public class DataConverter {
 
 	public static <E> String convertFromListToString(List<E> inputList) throws DataConvertException {
 		if (inputList == null) {
-			throw new DataConvertException("Error: fail to convert to integer array.");
+			throw new DataConvertException("Error: fail to convert from list to string.");
 		}
 		StringBuilder result = new StringBuilder();
 		for (E item : inputList) {

@@ -19,11 +19,11 @@ public enum Command {
 			try {
 				studentsQuantity = DataConverter.convertToInt(parameters);
 				List<Group> groups = schoolService.findGroupsByMaxStudent(studentsQuantity);
-				if (groups == null) {
+				if (groups.isEmpty()) {
 					return "not found";
 				}
 				return DataConverter.convertFromListToString(groups);
-			} catch (DataConvertException e) {
+			} catch (Exception e) {
 				return e.getMessage();
 			}
 		}

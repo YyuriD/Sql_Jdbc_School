@@ -3,6 +3,7 @@ package com.foxminded.yuri.school.service;
 import java.util.List;
 
 import com.foxminded.yuri.school.dao.DAOException;
+import com.foxminded.yuri.school.dao.GroupDao;
 import com.foxminded.yuri.school.dao.StudentDao;
 import com.foxminded.yuri.school.model.Group;
 import com.foxminded.yuri.school.model.Student;
@@ -10,9 +11,10 @@ import com.foxminded.yuri.school.model.Student;
 public class SchoolService  {
 
 	StudentDao studentDao = new StudentDao();
+	GroupDao groupDao = new GroupDao();
 
-	public List<Group> findGroupsByMaxStudent(Integer studentQuantity) {
-		return null;
+	public List<Group> findGroupsByMaxStudent(Integer maxStudent) throws DAOException {
+		return groupDao.findByMaxStudent(maxStudent);
 	}
 
 	public List<Student> findStudentsByCourse(Integer courseId) {

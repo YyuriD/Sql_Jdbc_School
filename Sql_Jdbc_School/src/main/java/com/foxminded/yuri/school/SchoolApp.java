@@ -14,6 +14,7 @@ public class SchoolApp {
 		processMenu();
 	}
 
+
 	private static void processMenu() {
 		final int INPUT_PARTS_NUM = 2;
 
