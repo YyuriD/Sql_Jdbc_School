@@ -12,13 +12,14 @@ import com.foxminded.yuri.school.model.Student;
 public class StudentDao {
 
 	private static final Logger logger = LogManager.getLogger(StudentDao.class);
-	private static final String ADD = "INSERT INTO students(student_id, first_name, last_name, group_id) VALUES (?,?,?,?)";
+	private static final String CREATE = "INSERT INTO students(student_id, first_name, last_name, group_id) VALUES (?,?,?,?)";
 	private static final String REMOVE = "DELETE FROM students WHERE student_id = ?";
 	private static final String GET = "SELECT student_id, first_name, last_name, group_id FROM students WHERE student_id = ?";
+	private static final String IS_EXISTS = "SELECT EXISTS (SELECT 1 FROM students WHERE student_id = ?)";
 
-	public int add(Student student) throws DAOException {
-		try (PreparedStatement statement = DatabaseConnector.getConnection().prepareStatement(ADD)) {
-			logger.debug("Adding new student with id " + student.getId());
+	public int create(Student student) throws DAOException {
+		logger.debug("Adding new student with id {}" + student.getId());
+		try (PreparedStatement statement = DatabaseConnector.getConnection().prepareStatement(CREATE)) {
 			statement.setInt(1, student.getId());
 			statement.setString(2, student.getFirstName());
 			statement.setString(3, student.getLastName());
@@ -31,8 +32,8 @@ public class StudentDao {
 	}
 
 	public int remove(Integer studentId) throws DAOException {
+		logger.debug("Removing student with id {}", studentId);
 		try (PreparedStatement statement = DatabaseConnector.getConnection().prepareStatement(REMOVE)) {
-			logger.debug("Removing student with id ", studentId);
 			statement.setInt(1, studentId);
 			return statement.executeUpdate();
 		} catch (SQLException e) {
@@ -41,10 +42,10 @@ public class StudentDao {
 		}
 	}
 
-	public Student get(Integer studentId) throws DAOException {
+	public Student findById(Integer studentId) throws DAOException {
+		logger.debug("Getting student with id {}", studentId);
 		Student student = null;
 		try (PreparedStatement statement = DatabaseConnector.getConnection().prepareStatement(GET)) {
-			logger.debug("Getting student with id ", studentId);
 			statement.setInt(1, studentId);
 			try (ResultSet result = statement.executeQuery()) {
 				if (result.next()) {
@@ -52,7 +53,7 @@ public class StudentDao {
 							result.getString("last_name"), result.getInt("group_id"));
 					logger.debug("Student found: {}", student);
 				} else {
-					logger.warn("No student found with id {}", studentId);
+					logger.debug("No student found with id {}", studentId);
 				}
 			}
 		} catch (SQLException e) {
@@ -60,5 +61,21 @@ public class StudentDao {
 			throw new DAOException("Can't get student with id " + studentId, e);
 		}
 		return student;
+	}
+
+	public boolean isExists(Integer studentId) throws DAOException {
+		logger.debug("Checking is student exists with id {}", studentId);
+		try (PreparedStatement statement = DatabaseConnector.getConnection().prepareStatement(IS_EXISTS)) {
+			statement.setInt(1, studentId);
+			try (ResultSet result = statement.executeQuery()) {
+				if (result.next()) {
+					return result.getBoolean(1);
+				}
+			}
+		} catch (SQLException e) {
+			logger.error("Error while checking is student exists with id {}", studentId);
+			throw new DAOException("Can't check is student exists with id " + studentId, e);
+		}
+		return false;
 	}
 }

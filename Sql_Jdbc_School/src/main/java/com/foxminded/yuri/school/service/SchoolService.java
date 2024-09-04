@@ -22,10 +22,10 @@ public class SchoolService  {
 
 	public void addStudent(Student student) throws ServiceLayerException {
 		try {
-			if (isStudentExist(student.getId())) {
+			if (studentDao.isExists(student.getId())) {
 				throw new ServiceLayerException("Can't add student, already exists.");
 			}
-			studentDao.add(student);
+			studentDao.create(student);
 		} catch (DAOException e) {
 			throw new ServiceLayerException("Can't add student.", e);
 		}
@@ -33,7 +33,7 @@ public class SchoolService  {
 
 	public void deleteStudent(Integer studentId) throws ServiceLayerException {
 		try {
-			if (!isStudentExist(studentId)) {
+			if (!studentDao.isExists(studentId)) {
 				throw new ServiceLayerException("Can't remove student, not found.");
 			}
 			studentDao.remove(studentId);
@@ -52,8 +52,5 @@ public class SchoolService  {
 		return false;
 	}
 
-	private boolean isStudentExist(Integer studentId) throws DAOException {
-		return studentDao.get(studentId) != null ? true : false;
-	}
 
 }
