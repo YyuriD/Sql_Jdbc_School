@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.foxminded.yuri.school.commands.Command;
-import com.foxminded.yuri.school.dao.DatabaseInitializer;
-import com.foxminded.yuri.school.dao.TestDataGenerator;
 
 public class SchoolApp {
 
@@ -19,10 +17,9 @@ public class SchoolApp {
 //			System.out.println(e.getMessage());
 //		}
 //
-//		System.out.println(getMenuView());
-//		processMenu();
-//	}
-
+		System.out.println(getMenuView());
+		processMenu();
+	}
 
 	private static void processMenu() {
 		final int INPUT_PARTS_NUM = 2;
@@ -58,7 +55,7 @@ public class SchoolApp {
 		}
 	}
 
-	private static Command parseCommand(String command) {
+	static Command parseCommand(String command) {
 		try {
 			return Command.valueOf(command.toUpperCase());
 		} catch (IllegalArgumentException e) {
@@ -66,7 +63,7 @@ public class SchoolApp {
 		}
 	}
 
-	public static String getMenuView() {
+	static String getMenuView() {
 		List<Command> commands = Arrays.asList(Command.values());
 		StringBuilder menuBuilder = new StringBuilder();
 

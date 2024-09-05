@@ -1,9 +1,11 @@
-package com.foxminded.yuri.school.dao;
+package com.foxminded.yuri.school.dbinit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
+
+import com.foxminded.yuri.school.dao.DatabaseConnector;
 
 public class TestDataGenerator {
 

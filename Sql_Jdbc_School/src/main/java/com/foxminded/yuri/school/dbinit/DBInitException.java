@@ -1,4 +1,4 @@
-package com.foxminded.yuri.school.dao;
+package com.foxminded.yuri.school.dbinit;
 
 public class DBInitException extends Exception {
 

@@ -1,10 +1,12 @@
-package com.foxminded.yuri.school.dao;
+package com.foxminded.yuri.school.dbinit;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+
+import com.foxminded.yuri.school.dao.DatabaseConnector;
 
 public class DatabaseInitializer {
 	public static void initialize() throws DBInitException {
