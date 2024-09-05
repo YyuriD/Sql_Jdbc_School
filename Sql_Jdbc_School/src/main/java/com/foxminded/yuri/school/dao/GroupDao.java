@@ -16,11 +16,13 @@ public class GroupDao {
 	private static final Logger logger = LogManager.getLogger(GroupDao.class);
 	private static final String CREATE = "INSERT INTO groups(group_id, group_name) VALUES (?,?)";
 	private static final String REMOVE = "DELETE FROM groups WHERE group_id = ?";
-	private static final String GET = "SELECT group_id, group_name FROM groups WHERE group_id = ?";
-	private static final String IS_EXISTS = "SELECT EXISTS (SELECT 1 FROM groups WHERE group_id = ?)";
-	private static final String FIND_BY_MAX_STUDENT = "SELECT g.group_id, g.group_name "
-			+ "FROM groups g LEFT JOIN students s ON g.group_id = s.group_id "
-			+ "GROUP BY g.group_id, g.group_name HAVING COUNT(s.student_id) <= ?";
+	private static final String FIND_BY_MAX_STUDENT = """
+			SELECT g.group_id, g.group_name
+			FROM groups g
+			LEFT JOIN students s ON g.group_id = s.group_id
+			GROUP BY g.group_id, g.group_name
+			HAVING COUNT(s.student_id) <= ?
+			""";
 
 	public int create(Group group) throws DAOException {
 		logger.debug("Adding new group with id {}" + group.getId());

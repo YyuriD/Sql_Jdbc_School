@@ -6,7 +6,6 @@ import com.foxminded.yuri.school.SchoolApp;
 import com.foxminded.yuri.school.model.Group;
 import com.foxminded.yuri.school.model.Student;
 import com.foxminded.yuri.school.service.SchoolService;
-import com.foxminded.yuri.school.utils.DataConvertException;
 import com.foxminded.yuri.school.utils.DataConverter;
 
 public enum Command {
@@ -37,14 +36,13 @@ public enum Command {
 			try {
 				courseId = DataConverter.convertToInt(parameters);
 				List<Student> students = schoolService.findStudentsByCourse(courseId);
-				if (students == null) {
+				if (students.isEmpty()) {
 					return "not found";
 				}
 				return DataConverter.convertFromListToString(students);
-			} catch (DataConvertException e) {
+			} catch (Exception e) {
 				return e.getMessage();
 			}
-
 		}
 	},
 
@@ -56,7 +54,7 @@ public enum Command {
 			try {
 				student = DataConverter.convertStudent(parameters);
 				schoolService.addStudent(student);
-				return "Student was added.";
+				return "New student was added.";
 			} catch (Exception e) {
 				return e.getMessage();
 			}
@@ -88,17 +86,12 @@ public enum Command {
 				if (parts == null || parts.length != 2) {
 					return "Error: wrong parameters";
 				}
-				if (schoolService.addStudentToCourse(parts[0], parts[1])) {
-					return "student was added to course";
-				} else {
-					return "fail adding student to course";
-				}
-			} catch (DataConvertException e) {
+				schoolService.addStudentToCourse(parts[0], parts[1]);
+				return "Student was added to course";
+			} catch (Exception e) {
 				return e.getMessage();
 			}
-
 		}
-
 	},
 
 	REMOVE_STUDENT_FROM_COURSE("student id,course id") {
@@ -111,17 +104,12 @@ public enum Command {
 				if (parts == null || parts.length != 2) {
 					return "Error: wrong parameters";
 				}
-				if (schoolService.removeStudentFromCourse(parts[0], parts[1])) {
-					return "student was removed from course";
-				} else {
-					return "fail removing student from course";
-				}
-			} catch (DataConvertException e) {
+				schoolService.removeStudentFromCourse(parts[0], parts[1]);
+				return "student was removed from course";
+			} catch (Exception e) {
 				return e.getMessage();
 			}
-
 		}
-
 	},
 
 	MENU("") {

@@ -5,14 +5,23 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.foxminded.yuri.school.commands.Command;
+import com.foxminded.yuri.school.dao.DatabaseInitializer;
+import com.foxminded.yuri.school.dao.TestDataGenerator;
 
 public class SchoolApp {
 
 	public static void main(String[] args) {
 
-		System.out.println(getMenuView());
-		processMenu();
-	}
+//		try {
+//			DatabaseInitializer.initialize();
+//			TestDataGenerator.generate();
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//
+//		System.out.println(getMenuView());
+//		processMenu();
+//	}
 
 
 	private static void processMenu() {
