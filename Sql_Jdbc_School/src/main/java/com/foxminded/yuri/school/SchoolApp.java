@@ -16,7 +16,7 @@ public class SchoolApp {
 //		} catch (Exception e) {
 //			System.out.println(e.getMessage());
 //		}
-//
+
 		System.out.println(getMenuView());
 		processMenu();
 	}
@@ -63,7 +63,7 @@ public class SchoolApp {
 		}
 	}
 
-	static String getMenuView() {
+	public static String getMenuView() {
 		List<Command> commands = Arrays.asList(Command.values());
 		StringBuilder menuBuilder = new StringBuilder();
 
