@@ -4,18 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import com.foxminded.yuri.school.commands.Command;
+import com.foxminded.yuri.school.command.Command;
 
 public class SchoolApp {
 
 	public static void main(String[] args) {
 
-//		try {
 //			DatabaseInitializer.initialize();
 //			TestDataGenerator.generate();
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
 
 		System.out.println(getMenuView());
 		processMenu();

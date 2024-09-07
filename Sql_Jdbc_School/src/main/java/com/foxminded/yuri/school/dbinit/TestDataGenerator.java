@@ -5,10 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.foxminded.yuri.school.dao.DatabaseConnector;
 
 public class TestDataGenerator {
 
+	private static final Logger logger = LogManager.getLogger(TestDataGenerator.class);
 	private static final String CREATE_GROUP = "INSERT INTO groups(group_name) VALUES(?)";
 	private static final String CREATE_COURS = "INSERT INTO courses(course_name, course_description) VALUES(?,?)";
 	private static final String CREATE_STUDENT = "INSERT INTO students(first_name, last_name, group_id) VALUES(?,?,?)";
@@ -19,15 +23,18 @@ public class TestDataGenerator {
 
 	private static Random random = new Random();
 
-	public static void generate() throws SQLException {
-		System.out.println("Generating test data, filling the database...");
+	public static void generate() {
+		logger.debug("Generating test data, filling the database...");
 		try (Connection connection = DatabaseConnector.getConnection()) {
 			generateGroups(connection);
 			generateCourses(connection);
 			generateStudents(connection);
 			addStudentsToCourses(connection);
+			System.out.println("Successful!");
+		} catch (SQLException e) {
+			logger.error(" Can't generate test data and fill the database. ", e);
 		}
-		System.out.println("Successful!");
+
 	}
 
 	private static void generateGroups(Connection connection) throws SQLException {
