@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.foxminded.yuri.school.command.Command;
+import com.foxminded.yuri.school.commands.Command;
 import com.foxminded.yuri.school.dao.DAOException;
 import com.foxminded.yuri.school.model.Group;
 import com.foxminded.yuri.school.service.SchoolService;

@@ -1,77 +1,101 @@
 package com.foxminded.yuri.school;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
-import com.foxminded.yuri.school.command.Command;
+import com.foxminded.yuri.school.commands.Command;
+import com.foxminded.yuri.school.commands.CommandAddStudent;
+import com.foxminded.yuri.school.commands.CommandFactory;
+import com.foxminded.yuri.school.parameters.ParamGroupId;
+import com.foxminded.yuri.school.parameters.ParamStudentFirstName;
+import com.foxminded.yuri.school.parameters.ParamStudentId;
+import com.foxminded.yuri.school.parameters.ParamStudentLastName;
+import com.foxminded.yuri.school.parameters.Parameter;
+import com.foxminded.yuri.school.service.SchoolService;
 
 public class SchoolApp {
 
+
+
+
 	public static void main(String[] args) {
+
+		ParamStudentId paramStudentId = new ParamStudentId("Enter student Id");
+		ParamStudentFirstName paramStudentFirstName = new ParamStudentFirstName("Enter student first name");
+		ParamStudentLastName paramStudentLastName = new ParamStudentLastName("Enter student last name");
+		ParamGroupId paramGroupId = new ParamGroupId("Enter group Id");
+
+		List<Parameter> addStudentParameters = Arrays.asList(paramStudentId, paramStudentFirstName,
+				paramStudentLastName, paramGroupId);
+		CommandAddStudent commandAddStudent = new CommandAddStudent("ADD_STUDENT", addStudentParameters);
+		Map<String, Command> commands = Map.of(commandAddStudent.getName(), commandAddStudent);
+		CommandFactory commandFactory = new CommandFactory(commands);
 
 //			DatabaseInitializer.initialize();
 //			TestDataGenerator.generate();
 
-		System.out.println(getMenuView());
-		processMenu();
+		System.out.println(viewCommands(commands.values()));
+		consoleInteraction(commandFactory);
 	}
 
-	private static void processMenu() {
-		final int INPUT_PARTS_NUM = 2;
+	private static void consoleInteraction(CommandFactory commandFactory) {
 
 		try (Scanner scanner = new Scanner(System.in)) {
-			Command currentCommand = null;
 
-			while (Command.EXIT != currentCommand) {
+			String input = "";
+			
+			while (true) {
 				System.out.print("enter command-> ");
-				String input = scanner.nextLine().trim();
-
+				input = scanner.nextLine().trim().toUpperCase();
+				if ("exit".equalsIgnoreCase(input)) {
+					break;
+				}
 				if (input.isEmpty()) {
 					System.out.println("Input cannot be empty. Please enter a command.");
 					continue;
 				}
-
 				try {
-					String[] parts = input.split(" ", INPUT_PARTS_NUM);
-					currentCommand = parseCommand(parts[0]);
-
-					if (Command.EXIT == currentCommand) {
-						System.out.println(currentCommand.execute("Good bye!"));
-						continue;
+					Command command = commandFactory.createCommand(input);
+					List<Parameter> parameters = command.getParameters();
+					String paramValue = null;
+					for (Parameter parameter : parameters) {
+						System.out.println(parameter.getPrompt());
+						paramValue = scanner.nextLine().trim();
+						parameter.setValue(paramValue);
 					}
-
-					String message = parts.length < INPUT_PARTS_NUM ? currentCommand.execute("")
-							: currentCommand.execute(parts[1]);
+					String message = command.execute(parameters, new SchoolService());
 					System.out.println(message);
 				} catch (Exception e) {
-					System.out.println("Error: " + e.getMessage());
+					System.out.println(e.getMessage());
 				}
+
 			}
 		}
 	}
 
-	static Command parseCommand(String command) {
-		try {
-			return Command.valueOf(command.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Unknown command \"" + command + "\".");
-		}
-	}
+//	static Command parseCommand(String command) {
+//		try {
+//			return Command.valueOf(command.toUpperCase());
+//		} catch (IllegalArgumentException e) {
+//			throw new IllegalArgumentException("Unknown command \"" + command + "\".");
+//		}
+//	}
 
-	public static String getMenuView() {
-		List<Command> commands = Arrays.asList(Command.values());
-		StringBuilder menuBuilder = new StringBuilder();
+	public static String viewCommands(Collection<Command> commands) {
+
+		StringBuilder description = new StringBuilder();
 
 		// TODO get ride of magic numbers(calcCommandsMaxLength, calcParamsMaxLength)
-		menuBuilder.append("-".repeat(80)).append("\n");
-		menuBuilder.append(String.format("| %-27s | %-48s |", "Command", "Parameters description")).append("\n");
-		menuBuilder.append("-".repeat(80)).append("\n");
+		description.append("-".repeat(80)).append("\n");
+		description.append(String.format("| %-27s | %-48s |", "Command", "Description")).append("\n");
+		description.append("-".repeat(80)).append("\n");
 
-		commands.forEach(c -> menuBuilder.append(String.format("| %-27s | %-48s |", c.name(), c.parameterDiscription))
+		commands.forEach(c -> description.append(String.format("| %-27s | %-48s |", c.getName(), c.getDescription()))
 				.append("\n"));
-
-		menuBuilder.append("-".repeat(80)).append("\n");
-		return menuBuilder.toString();
+		description.append("-".repeat(80)).append("\n");
+		return description.toString();
 	}
 }
