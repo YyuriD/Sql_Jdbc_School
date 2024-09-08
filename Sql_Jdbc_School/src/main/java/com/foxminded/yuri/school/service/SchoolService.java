@@ -19,8 +19,8 @@ public class SchoolService  {
 		return groupDao.findByMaxStudent(maxStudent);
 	}
 
-	public List<Student> findStudentsByCourse(Integer courseId) throws DAOException {
-		return studentDao.findByCourse(courseId);
+	public List<Student> findStudentsByCourseName(String courseName) throws DAOException {
+		return studentDao.findByCourseName(courseName);
 	}
 
 	public void addStudent(Student student) throws ServiceLayerException {

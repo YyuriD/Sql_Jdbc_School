@@ -18,11 +18,12 @@ public class StudentDao {
 	private static final String REMOVE = "DELETE FROM students WHERE student_id = ?";
 	private static final String FIND_BY_ID = "SELECT student_id, first_name, last_name, group_id FROM students WHERE student_id = ?";
 	private static final String IS_EXISTS = "SELECT EXISTS (SELECT 1 FROM students WHERE student_id = ?)";
-	private static final String FIND_BY_COURSE = """
+	private static final String FIND_BY_COURSE_NAME = """
 			SELECT s.student_id, s.first_name, s.last_name, s.group_id
 			FROM students s
 			JOIN students_courses sc ON s.student_id = sc.student_id
-			WHERE sc.course_id = ?
+			JOIN courses c ON sc.course_id = c.course_id
+			WHERE LOWER(c.course_name) = LOWER(?)
 			""";
 
 	public int create(Student student) throws DAOException {
@@ -87,11 +88,11 @@ public class StudentDao {
 		return false;
 	}
 
-	public List<Student> findByCourse(Integer courseId) throws DAOException {
-		logger.debug("Finding students by course id {}", courseId);
+	public List<Student> findByCourseName(String courseName) throws DAOException {
+		logger.debug("Finding students by course id {}", courseName);
 		List<Student> students = new ArrayList<>();
-		try (PreparedStatement statement = DatabaseConnector.getConnection().prepareStatement(FIND_BY_COURSE)) {
-			statement.setInt(1, courseId);
+		try (PreparedStatement statement = DatabaseConnector.getConnection().prepareStatement(FIND_BY_COURSE_NAME)) {
+			statement.setString(1, courseName);
 			try (ResultSet result = statement.executeQuery()) {
 				while (result.next()) {
 					Student student = new Student(result.getInt("student_id"), result.getString("first_name"),
@@ -101,8 +102,8 @@ public class StudentDao {
 				}
 			}
 		} catch (SQLException e) {
-			logger.error("Error while finding students by course id {}", courseId, e);
-			throw new DAOException("Can't find students by course id " + courseId, e);
+			logger.error("Error while finding students by course name {}", courseName, e);
+			throw new DAOException("Can't find students by course name " + courseName, e);
 		}
 		return students;
 	}

@@ -7,13 +7,13 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class CommandFactory {
+public class CommandProvider {
 
-	private static final Logger logger = LogManager.getLogger(CommandFactory.class);
-	Map<String, Command> commands = new HashMap<>();
+	private static final Logger logger = LogManager.getLogger(CommandProvider.class);
+	private Map<String, Command> commands;
 
-	public CommandFactory(Map<String, Command> commands) {
-		this.commands = commands;
+	public CommandProvider() {
+		commands = new HashMap<>();
 	}
 
 	public Command createCommand(String commandName) {
@@ -26,7 +26,10 @@ public class CommandFactory {
 	}
 
 	public Collection<Command> getCommands() {
+		return commands.values();
+	}
 
-		return null;
+	public Command addCommand(Command command) {
+		return commands.put(command.getName(), command);
 	}
 }

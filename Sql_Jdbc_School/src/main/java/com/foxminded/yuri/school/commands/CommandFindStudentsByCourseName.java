@@ -6,20 +6,18 @@ import java.util.List;
 import com.foxminded.yuri.school.model.Student;
 import com.foxminded.yuri.school.parameters.Parameter;
 import com.foxminded.yuri.school.service.SchoolService;
+import com.foxminded.yuri.school.utils.DataConverter;
 
-public class CommandAddStudent implements Command {
+public class CommandFindStudentsByCourseName implements Command {
 
 	private String name;
 	private List<Parameter> parameters;
-	private String description = "Add a new student to data base";
+	private String description = "Find all students by course name";
 
-	public CommandAddStudent() {
-		this.name = "ADD_STUDENT";
+	public CommandFindStudentsByCourseName() {
+		this.name = "FIND_STUDENTS_BY_COURSE_NAME";
 		parameters = new ArrayList<>();
-		parameters.add(new Parameter("Student id", "Enter student Id"));
-		parameters.add(new Parameter("First name", "Enter student first name"));
-		parameters.add(new Parameter("Last name", "Enter student last name"));
-		parameters.add(new Parameter("Group id", "Enter group Id"));
+		parameters.add(new Parameter("Course name", "Enter course name"));
 	}
 
 	@Override
@@ -40,10 +38,12 @@ public class CommandAddStudent implements Command {
 	@Override
 	public String execute(List<Parameter> parameters, SchoolService schoolService) {
 		try {
-			Student student = new Student(Integer.parseInt(parameters.get(0).getValue()), parameters.get(1).getValue(),
-					parameters.get(2).getValue(), Integer.parseInt(parameters.get(3).getValue()));
-			schoolService.addStudent(student);
-			return "New student was added.";
+			String courseName = parameters.get(0).getValue();
+			List<Student> students = schoolService.findStudentsByCourseName(courseName);
+			if (students.isEmpty()) {
+				return "not found";
+			}
+			return DataConverter.convertFromListToString(students);
 		} catch (Exception e) {
 			return e.getMessage();
 		}

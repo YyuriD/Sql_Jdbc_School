@@ -1,52 +1,41 @@
 package com.foxminded.yuri.school;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.foxminded.yuri.school.commands.Command;
 import com.foxminded.yuri.school.commands.CommandAddStudent;
-import com.foxminded.yuri.school.commands.CommandFactory;
-import com.foxminded.yuri.school.parameters.ParamGroupId;
-import com.foxminded.yuri.school.parameters.ParamStudentFirstName;
-import com.foxminded.yuri.school.parameters.ParamStudentId;
-import com.foxminded.yuri.school.parameters.ParamStudentLastName;
+import com.foxminded.yuri.school.commands.CommandFindGroupByMaxStudent;
+import com.foxminded.yuri.school.commands.CommandFindStudentsByCourseName;
+import com.foxminded.yuri.school.commands.CommandProvider;
 import com.foxminded.yuri.school.parameters.Parameter;
 import com.foxminded.yuri.school.service.SchoolService;
 
 public class SchoolApp {
 
-
-
-
 	public static void main(String[] args) {
+		// TODO application initialiser
+		CommandAddStudent commandAddStudent = new CommandAddStudent();
+		CommandFindGroupByMaxStudent commandFindGroupByMaxStudent = new CommandFindGroupByMaxStudent();
+		CommandFindStudentsByCourseName commandFindStudentsByCourseName = new CommandFindStudentsByCourseName();
+		CommandProvider commandProvider = new CommandProvider();
+		commandProvider.addCommand(commandAddStudent);
+		commandProvider.addCommand(commandFindGroupByMaxStudent);
+		commandProvider.addCommand(commandFindStudentsByCourseName);
 
-		ParamStudentId paramStudentId = new ParamStudentId("Enter student Id");
-		ParamStudentFirstName paramStudentFirstName = new ParamStudentFirstName("Enter student first name");
-		ParamStudentLastName paramStudentLastName = new ParamStudentLastName("Enter student last name");
-		ParamGroupId paramGroupId = new ParamGroupId("Enter group Id");
-
-		List<Parameter> addStudentParameters = Arrays.asList(paramStudentId, paramStudentFirstName,
-				paramStudentLastName, paramGroupId);
-		CommandAddStudent commandAddStudent = new CommandAddStudent("ADD_STUDENT", addStudentParameters);
-		Map<String, Command> commands = Map.of(commandAddStudent.getName(), commandAddStudent);
-		CommandFactory commandFactory = new CommandFactory(commands);
-
+//***************************************************************
 //			DatabaseInitializer.initialize();
 //			TestDataGenerator.generate();
+//***************************************************************
 
-		System.out.println(viewCommands(commands.values()));
-		consoleInteraction(commandFactory);
+		System.out.println(viewCommands(commandProvider.getCommands()));
+		consoleInteraction(commandProvider);
 	}
 
-	private static void consoleInteraction(CommandFactory commandFactory) {
-
+	private static void consoleInteraction(CommandProvider commandProvider) {
 		try (Scanner scanner = new Scanner(System.in)) {
-
 			String input = "";
-			
 			while (true) {
 				System.out.print("enter command-> ");
 				input = scanner.nextLine().trim().toUpperCase();
@@ -58,7 +47,7 @@ public class SchoolApp {
 					continue;
 				}
 				try {
-					Command command = commandFactory.createCommand(input);
+					Command command = commandProvider.createCommand(input);
 					List<Parameter> parameters = command.getParameters();
 					String paramValue = null;
 					for (Parameter parameter : parameters) {
@@ -71,31 +60,20 @@ public class SchoolApp {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
-
 			}
 		}
 	}
 
-//	static Command parseCommand(String command) {
-//		try {
-//			return Command.valueOf(command.toUpperCase());
-//		} catch (IllegalArgumentException e) {
-//			throw new IllegalArgumentException("Unknown command \"" + command + "\".");
-//		}
-//	}
-
 	public static String viewCommands(Collection<Command> commands) {
-
 		StringBuilder description = new StringBuilder();
 
-		// TODO get ride of magic numbers(calcCommandsMaxLength, calcParamsMaxLength)
-		description.append("-".repeat(80)).append("\n");
-		description.append(String.format("| %-27s | %-48s |", "Command", "Description")).append("\n");
-		description.append("-".repeat(80)).append("\n");
-
-		commands.forEach(c -> description.append(String.format("| %-27s | %-48s |", c.getName(), c.getDescription()))
+		// TODO get ride of magic numbers(calcCommandsMaxLength(),calcParamsMaxLength())
+		description.append("-".repeat(86)).append("\n");
+		description.append(String.format("| %-30s | %-50s |", "Command", "Description")).append("\n");
+		description.append("-".repeat(86)).append("\n");
+		commands.forEach(c -> description.append(String.format("| %-30s | %-50s |", c.getName(), c.getDescription()))
 				.append("\n"));
-		description.append("-".repeat(80)).append("\n");
+		description.append("-".repeat(86)).append("\n");
 		return description.toString();
 	}
 }

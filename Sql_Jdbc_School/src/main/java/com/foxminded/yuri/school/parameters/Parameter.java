@@ -1,13 +1,31 @@
 package com.foxminded.yuri.school.parameters;
 
-public interface Parameter {
+public class Parameter {
 
-	String getValue();
+	String value;
+	String prompt;
+	String name;
 
-	void setValue(String value) throws IllegalArgumentException;
+	public Parameter(String name, String prompt) {
+		this.prompt = prompt;
+		this.name = name;
+	}
 
-	String getPrompt();
+	public String getName() {
+		return name;
+	}
 
-	boolean isValueFilled();
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getPrompt() {
+		return prompt;
+	}
+
 
 }
